@@ -22,22 +22,25 @@ class user {
         $this->_id = $id;
     }
 
-    public function getUserById($id)
-    {   
-        if(empty($id))
-           return false;
-        else
-           $this->setId($id);
+    public function isUser($username,$password)
+    {
+	if(empty($username)) return false;
+	if(empty($password)) return false;
 
-        try{
-          $sql = "SELECT * FROM user WHERE id=:id";
-          $dbh = $this->_db->dest->prepare($sql);
-          $dbh->execute(array(':id'=>$this->_id));
-          $info = $dbh->fetch(PDO::FETCH_OBJ);
-          return $info;
-        }
-        catch(Exception $e) {
-          return false;
-        }
+	
+        $sql = "SELECT * FROM user WHERE username=:username and password=:password";
+        $dbh = $this->_db->dest->prepare($sql);
+        $dbh->execute(array(':username'=>$username,':password'=>$password));
+        return $dbh->fetch(PDO::FETCH_OBJ);
     }
+
+    public function isLogin()
+    {
+	return isset($_SESSION['username']);
+    }
+
+    public function loginOut()
+    {
+    }
+
 }
